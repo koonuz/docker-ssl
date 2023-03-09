@@ -5,6 +5,5 @@ RUN apt-get -y update && \
     apt-get clean && \
     cd /usr/local && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-    
-WORKDIR /root
-CMD [ "./sh", "-P", "/etc/service"]
+
+CMD [ "sh", "-c", "/root/ssl.sh"]
