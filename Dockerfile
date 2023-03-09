@@ -4,7 +4,6 @@ COPY runit /etc/service
 RUN apk update && \
     apk add --no-cache tzdata runit acme.sh dcron && \
     rm -rf /var/cache/apk/* && \
-    chmod +x /root/ssl.sh && \
-    chmod +x /etc/service/acme/run
+    chmod +x /root/ssl.sh /etc/service/acme/run
 WORKDIR /root
-CMD [ "runsvdir", "-P", "/etc/service"]
+CMD ["runsvdir", "-P", "/etc/service"]
