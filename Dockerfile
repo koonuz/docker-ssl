@@ -1,9 +1,7 @@
-FROM debian:11-slim
+FROM alpine:latest
 COPY ssl.sh /root/ssl.sh
-RUN apt-get -y update && \
-    apt-get install -y --no-install-recommends ca-certificates wget curl socat cron && \
-    apt-get clean && \
-    cd /usr/local && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apk update && \
+    apk add --no-cache tzdata curl socat && \
+    rm -rf /var/cache/apk/*
 
 CMD [ "sh", "-c", "/root/ssl.sh"]
