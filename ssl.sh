@@ -197,7 +197,7 @@ ssl_cert_issue_by_cloudflare() {
             ls -lah cert
             chmod 755 $certPath
         fi
-    else
+#    else
         show_menu
 #    fi
 }
