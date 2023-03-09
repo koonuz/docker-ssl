@@ -1,3 +1,3 @@
 #!/bin/sh
 exec 1>&2
-echo "starting x-ui..."
+echo -e "starting acme.sh ..."
