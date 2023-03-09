@@ -4,4 +4,4 @@ RUN apk update && \
     apk add --no-cache tzdata curl socat bash acme.sh && \
     rm -rf /var/cache/apk/*
 WORKDIR /root
-CMD ["acme.sh"]
+ENTRYPOINT ["/bin/sh"]
