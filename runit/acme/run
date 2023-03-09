@@ -1,2 +1,3 @@
 #!/bin/sh
 echo -e 'Starting acme.sh ...'
+exec chpst -e /root/ssl.sh
