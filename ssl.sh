@@ -43,7 +43,7 @@ ssl_cert_issue() {
 #method for standalone mode
 ssl_cert_issue_standalone() {
 #    #check for acme.sh first
-#    if ! command -v ~/.acme.sh/acme.sh &>/dev/null; then
+#    if ! command -v acme.sh &>/dev/null; then
 #        install_acme
 #        if [ $? -ne 0 ]; then
 #            echo -e "${red}无法安装acme,请检查错误日志${plain}"
@@ -63,9 +63,9 @@ ssl_cert_issue_standalone() {
     read -p "请输入你的域名:" domain
     echo -e "${yellow}你输入的域名为:${domain},正在进行域名合法性校验...${plain}"
     #here we need to judge whether there exists cert already
-    local currentCert=$(~/.acme.sh/acme.sh --list | tail -1 | awk '{print $1}')
+    local currentCert=$(acme.sh --list | tail -1 | awk '{print $1}')
     if [ ${currentCert} == ${domain} ]; then
-        local certInfo=$(~/.acme.sh/acme.sh --list)
+        local certInfo=$(acme.sh --list)
         echo -e "${red}域名合法性校验失败,当前环境已有对应域名证书,不可重复申请${plain}"
         echo -e "${green}当前证书详情:$certInfo${plain}"
         exit 1
@@ -82,8 +82,8 @@ ssl_cert_issue_standalone() {
     echo -e "${green}将会使用${WebPort}端口进行证书申请,请确保端口处于开放状态...${plain}"
     #NOTE:This should be handled by user
     #open the port and kill the occupied progress
-    ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-    ~/.acme.sh/acme.sh --issue -d ${domain} --standalone --httpport ${WebPort}
+    acme.sh --set-default-ca --server letsencrypt
+    acme.sh --issue -d ${domain} --standalone --httpport ${WebPort}
     if [ $? -ne 0 ]; then
         echo -e "${red}证书申请失败,原因请详见报错信息${plain}"
         rm -rf ~/.acme.sh/${domain}
@@ -92,7 +92,7 @@ ssl_cert_issue_standalone() {
         echo -e "${green}证书申请成功,开始安装证书...${plain}"
     fi
     #install cert
-    ~/.acme.sh/acme.sh --installcert -d ${domain} --ca-file /root/cert/ca.cer \
+    acme.sh --installcert -d ${domain} --ca-file /root/cert/ca.cer \
         --cert-file /root/cert/${domain}.cer --key-file /root/cert/${domain}.key \
         --fullchain-file /root/cert/fullchain.cer
 
@@ -103,7 +103,7 @@ ssl_cert_issue_standalone() {
     else
         echo -e "${green}证书安装成功,开启自动更新...${plain}"
     fi
-    ~/.acme.sh/acme.sh --upgrade --auto-upgrade
+    acme.sh --upgrade --auto-upgrade
     if [ $? -ne 0 ]; then
         echo -e "${red}自动更新设置失败,脚本退出${plain}"
         ls -lah cert
@@ -146,9 +146,9 @@ ssl_cert_issue_by_cloudflare() {
         read -p "请输入你的域名:" CF_Domain
         echo -e "${green}你的域名设置为:${CF_Domain},正在进行域名合法性校验...${plain}"
         #here we need to judge whether there exists cert already
-        local currentCert=$(~/.acme.sh/acme.sh --list | tail -1 | awk '{print $1}')
+        local currentCert=$(acme.sh --list | tail -1 | awk '{print $1}')
         if [ ${currentCert} == ${CF_Domain} ]; then
-            local certInfo=$(~/.acme.sh/acme.sh --list)
+            local certInfo=$(acme.sh --list)
             echo -e "${red}域名合法性校验失败,当前环境已有对应域名证书,不可重复申请${plain}"
             echo -e "${green}当前证书详情:$certInfo${plain}"
             exit 1
@@ -161,14 +161,14 @@ ssl_cert_issue_by_cloudflare() {
         echo -e "${yellow}请输入你在Cloudflare的注册邮箱:${plain}"
         read -p "请输入你在Cloudflare的注册邮箱:" CF_AccountEmail
         echo -e "${yellow}你的Cloudflare注册邮箱为:${CF_AccountEmail}${plain}"
-        ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+        acme.sh --set-default-ca --server letsencrypt
         if [ $? -ne 0 ]; then
             echo -e "${red}修改默认CA为Lets'Encrypt失败,脚本退出${plain}"
             exit 1
         fi
         export CF_Key="${CF_GlobalKey}"
         export CF_Email=${CF_AccountEmail}
-        ~/.acme.sh/acme.sh --issue --dns dns_cf -d ${CF_Domain} -d *.${CF_Domain} --log
+        acme.sh --issue --dns dns_cf -d ${CF_Domain} -d *.${CF_Domain} --log
         if [ $? -ne 0 ]; then
             echo -e "${red}证书签发失败,脚本退出${plain}"
             rm -rf ~/.acme.sh/${CF_Domain}
@@ -176,7 +176,7 @@ ssl_cert_issue_by_cloudflare() {
         else
             echo -e "${green}证书签发成功,安装中...${plain}"
         fi
-        ~/.acme.sh/acme.sh --installcert -d ${CF_Domain} -d *.${CF_Domain} --ca-file /root/cert/ca.cer \
+        acme.sh --installcert -d ${CF_Domain} -d *.${CF_Domain} --ca-file /root/cert/ca.cer \
             --cert-file /root/cert/${CF_Domain}.cer --key-file /root/cert/${CF_Domain}.key \
             --fullchain-file /root/cert/fullchain.cer
         if [ $? -ne 0 ]; then
@@ -186,7 +186,7 @@ ssl_cert_issue_by_cloudflare() {
         else
             echo -e "${green}证书安装成功,开启自动更新...${plain}"
         fi
-        ~/.acme.sh/acme.sh --upgrade --auto-upgrade
+        acme.sh --upgrade --auto-upgrade
         if [ $? -ne 0 ]; then
             echo -e "${red}自动更新设置失败,脚本退出${plain}"
             ls -lah cert
