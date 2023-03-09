@@ -3,5 +3,5 @@ COPY ssl.sh /root/ssl.sh
 RUN apk update && \
     apk add --no-cache tzdata curl socat && \
     rm -rf /var/cache/apk/*
-
-CMD [ "sh", "-c", "/root/ssl.sh"]
+WORKDIR /root
+CMD ["sh"]
