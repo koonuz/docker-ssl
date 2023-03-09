@@ -27,18 +27,18 @@ ssl_cert_issue() {
     fi
 }
 
-install_acme() {
-    cd ~
-    echo -e "${green}开始安装acme脚本...${plain}"
-    curl https://get.acme.sh | sh
-    if [ $? -ne 0 ]; then
-        echo -e "${red}acme安装失败${plain}"
-        return 1
-    else
-        echo -e "${green}acme安装成功${plain}"
-    fi
-    return 0
-}
+#install_acme() {
+#    cd ~
+#    echo -e "${green}开始安装acme脚本...${plain}"
+#    curl https://get.acme.sh | sh
+#    if [ $? -ne 0 ]; then
+#        echo -e "${red}acme安装失败${plain}"
+#        return 1
+#    else
+#        echo -e "${green}acme安装成功${plain}"
+#    fi
+#    return 0
+#}
 
 #method for standalone mode
 ssl_cert_issue_standalone() {
