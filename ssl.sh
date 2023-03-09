@@ -199,7 +199,7 @@ ssl_cert_issue_by_cloudflare() {
         fi
     else
         show_menu
-    fi
+#    fi
 }
 
 show_menu() {
