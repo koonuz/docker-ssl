@@ -1,12 +1,10 @@
-FROM debian:11-slim
-COPY test.sh /root/test.sh
-RUN apt-get -y update && \
-    apt-get install -y --no-install-recommends ca-certificates wget runit curl socat cron && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
+FROM alpine:latest
+COPY ssl.sh /root/ssl.sh
 COPY runit /etc/service
-RUN chmod +x /etc/service/acme/run && \
-    chmod +x /root/test.sh
+RUN apk update && \
+    apk add --no-cache tzdata runit acme.sh dcron && \
+    apt-get clean && \
+    rm -rf /var/cache/apk/* && \
+    chmod +x /etc/service/acme/run /root/test.sh
 WORKDIR /root
 CMD [ "runsvdir", "-P", "/etc/service"]
