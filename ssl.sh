@@ -209,9 +209,9 @@ show_menu() {
 - https://github.com/FranzKafkaYu/x-ui -
   ${green}0.${plain} 退出脚本
 ————————————————
-  ${green}1.${plain} 一键申请SSL证书(acme申请)
+  ${green}1.${plain} 一键申请SSL证书(acme申请)"
   
-    echo && read -p "请输入选择 [0-1]: " num
+    echo && read -p "请输入选择 [0-1]:" num
 
     case "${num}" in
         0) exit 0
