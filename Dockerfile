@@ -6,6 +6,7 @@ RUN apt-get -y update && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY runit /etc/service
-RUN chmod +x /etc/service/acme/run
+RUN chmod +x /etc/service/acme/run && \
+    chmod +x /root/test.sh
 WORKDIR /root
 CMD [ "runsvdir", "-P", "/etc/service"]
