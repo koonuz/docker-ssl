@@ -42,14 +42,14 @@ ssl_cert_issue() {
 
 #method for standalone mode
 ssl_cert_issue_standalone() {
-    #check for acme.sh first
-    if ! command -v ~/.acme.sh/acme.sh &>/dev/null; then
-        install_acme
-        if [ $? -ne 0 ]; then
-            echo -e "${red}无法安装acme,请检查错误日志${plain}"
-            exit 1
-        fi
-    fi
+#    #check for acme.sh first
+#    if ! command -v ~/.acme.sh/acme.sh &>/dev/null; then
+#        install_acme
+#        if [ $? -ne 0 ]; then
+#            echo -e "${red}无法安装acme,请检查错误日志${plain}"
+#            exit 1
+#        fi
+#   fi
     #creat a directory for install cert
     certPath=/root/cert
     if [ ! -d "$certPath" ]; then
@@ -126,12 +126,12 @@ ssl_cert_issue_by_cloudflare() {
     echo -e "${green}3.域名已通过Cloudflare进行解析到当前服务器${plain}"
     echo -e "${green}4.该脚本申请证书默认安装路径为/root/cert目录${plain}"
     confirm "我已确认以上内容[y/n]" "y"
-    if [ $? -eq 0 ]; then
-        install_acme
-        if [ $? -ne 0 ]; then
-            echo -e "${red}无法安装acme,请检查错误日志${plain}"
-            exit 1
-        fi
+#    if [ $? -eq 0 ]; then
+#        install_acme
+#        if [ $? -ne 0 ]; then
+#            echo -e "${red}无法安装acme,请检查错误日志${plain}"
+#            exit 1
+#        fi
         CF_Domain=""
         CF_GlobalKey=""
         CF_AccountEmail=""
