@@ -1,3 +1,4 @@
 #!/bin/sh
 exec 2>&1
 echo 'Starting acme.sh ...'
+exec chpst -e acme.sh
