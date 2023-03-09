@@ -4,4 +4,4 @@ RUN apk update && \
     apk add --no-cache tzdata curl socat && \
     rm -rf /var/cache/apk/*
 WORKDIR /root
-CMD ["sh"]
+CMD ["/bin/bash"]
