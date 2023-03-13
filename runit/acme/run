@@ -1,3 +1,4 @@
 #!/bin/sh
-exec 1>&2
+exec 2>&1
 echo -e "starting acme.sh ..."
+exec crontab -l
