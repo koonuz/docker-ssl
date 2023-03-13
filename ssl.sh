@@ -5,6 +5,11 @@ green='\033[0;32m'
 yellow='\033[0;33m'
 plain='\033[0m'
 
+before_show_menu() {
+    echo && echo -n -e "${yellow}按回车返回主菜单: ${plain}" && read temp
+    show_menu
+}
+
 ssl_cert_issue() {
     local method=""
     echo -e ""
@@ -198,20 +203,30 @@ ssl_cert_issue_by_cloudflare() {
         show_menu
     fi
 }
+
+check_crontab() {
+    crontab -l
+    before_show_menu
+}
+
 show_menu() {
     echo -e "
   ${green}Acme.sh - 域名申请SSL脚本${plain}
 ————————————————
-  ${green}1.${plain} 申请SSL证书(含自动续签功能)"
   ${green}0.${plain} 退出脚本
+————————————————
+  ${green}1.${plain} 申请SSL证书(含自动续签功能)
+  ${green}2.${plain} 查看SSL证书自动续签任务
   
-    echo && read -p "请输入选择 [0-1]:" num
+    echo && read -p "请输入选择 [0-2]:" num
     case "${num}" in
         0) exit 0
         ;;
         1) ssl_cert_issue
         ;;
-        *) echo -e "${red}请输入正确的数字 [0-1]${plain}"
+        2) check_crontab
+        ;;
+        *) echo -e "${red}请输入正确的数字 [0-2]${plain}"
         ;;
     esac
 }
