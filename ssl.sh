@@ -216,7 +216,7 @@ show_menu() {
   ${green}0.${plain} 退出脚本
 ————————————————
   ${green}1.${plain} 申请SSL证书(含自动续签功能)
-  ${green}2.${plain} 查看SSL证书自动续签任务
+  ${green}2.${plain} 查看SSL证书自动续签任务"
   
     echo && read -p "请输入选择 [0-2]:" num
     case "${num}" in
