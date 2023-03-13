@@ -211,7 +211,7 @@ check_crontab() {
 
 show_menu() {
     echo -e "
-  ${green}Acme.sh - 域名申请SSL脚本${plain}
+  ${green}Acme.sh - 一键申请域名免费SSL证书${plain}
 ————————————————
   ${green}0.${plain} 退出脚本
 ————————————————
