@@ -10,7 +10,7 @@ ssl_cert_issue() {
     echo -e ""
     echo -e "${yellow}******使用说明******${plain}"
     echo -e "${green}该脚本提供两种方式实现证书签发,证书安装路径均为/root/cert${plain}"
-    echo -e "${green}方式1:acme standalone mode${plain},需要保持端口开放"
+    echo -e "${green}方式1:acme standalone mode${plain},需要保持端口开放,本脚本默认使用端口为${green}89端口${plain}"
     echo -e "${green}方式2:acme DNS API mode${plain},需要提供Cloudflare Global API Key"
     echo -e "如域名属于${green}免费域名${plain},则推荐使用${green}方式1${plain}进行申请"
     echo -e "如域名属于${green}非免费域名${plain}且${green}使用Cloudflare进行域名解析${plain}的,则推荐使用${green}方式2${plain}进行申请"
@@ -29,13 +29,13 @@ ssl_cert_issue() {
 
 install_acme() {
     cd ~
-    echo -e "${green}开始安装acme脚本...${plain}"
+    echo -e "${green}开始安装acme.sh脚本...${plain}"
     curl https://get.acme.sh | sh
     if [ $? -ne 0 ]; then
-        echo -e "${red}acme安装失败${plain}"
+        echo -e "${red}acme.sh安装失败${plain}"
         return 1
     else
-        echo -e "${green}acme安装成功${plain}"
+        echo -e "${green}acme.sh安装成功${plain}"
     fi
     return 0
 }
@@ -46,7 +46,7 @@ ssl_cert_issue_standalone() {
     if ! command -v acme.sh &>/dev/null; then
         install_acme
         if [ $? -ne 0 ]; then
-            echo -e "${red}无法安装acme,请检查错误日志${plain}"
+            echo -e "${red}无法安装acme.sh,请检查错误日志${plain}"
             exit 1
         fi
     fi
@@ -73,10 +73,10 @@ ssl_cert_issue_standalone() {
         echo -e "${green}证书有效性校验通过...${plain}"
     fi
     #get needed port here
-    local WebPort=80
-    read -p "请输入你所希望使用的端口,按回车键将使用默认80端口:" WebPort
+    local WebPort=89
+    read -p "请输入你所希望使用的端口,按回车键将使用默认89端口:" WebPort
     if [[ ${WebPort} -gt 65535 || ${WebPort} -lt 1 ]]; then
-        echo -e "${red}你所选择的端口${WebPort}为无效值${plain},将使用${yellow}默认80端口${plain}进行申请"
+        echo -e "${red}你所选择的端口${WebPort}为无效值${plain},将使用${yellow}默认89端口${plain}进行申请"
     fi
     echo -e "${green}将会使用${WebPort}端口进行证书申请,请确保端口处于开放状态...${plain}"
     #NOTE:This should be handled by user
@@ -126,7 +126,7 @@ ssl_cert_issue_by_cloudflare() {
     if [ $? -eq 0 ]; then
         install_acme
         if [ $? -ne 0 ]; then
-            echo -e "${red}无法安装acme,请检查错误日志${plain}"
+            echo -e "${red}无法安装acme.sh,请检查错误日志${plain}"
             exit 1
         fi
         CF_Domain=""
@@ -200,12 +200,10 @@ ssl_cert_issue_by_cloudflare() {
 }
 show_menu() {
     echo -e "
-  ${green}x-ui 面板管理脚本${plain}
---- 该版本为 FranzKafkaYu 增强版 ---  
-- https://github.com/FranzKafkaYu/x-ui -
-  ${green}0.${plain} 退出脚本
+  ${green}Acme.sh - 域名申请SSL脚本${plain}
 ————————————————
-  ${green}1.${plain} 一键申请SSL证书(acme申请)"
+  ${green}1.${plain} 申请SSL证书(含自动续签功能)"
+  ${green}0.${plain} 退出脚本
   
     echo && read -p "请输入选择 [0-1]:" num
     case "${num}" in
