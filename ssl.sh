@@ -1,8 +1,10 @@
 #!/bin/bash
+
 red='\033[0;31m'
 green='\033[0;32m'
 yellow='\033[0;33m'
 plain='\033[0m'
+
 ssl_cert_issue() {
     local method=""
     echo -e ""
@@ -14,6 +16,7 @@ ssl_cert_issue() {
     echo -e "如域名属于${green}非免费域名${plain}且${green}使用Cloudflare进行域名解析${plain}的,则推荐使用${green}方式2${plain}进行申请"
     read -p "请选择你想使用的方式【1或2】": method
     echo -e "你所使用的方式为${green}${method}${plain}"
+
     if [ "${method}" == "1" ]; then
         ssl_cert_issue_standalone
     elif [ "${method}" == "2" ]; then
@@ -24,33 +27,23 @@ ssl_cert_issue() {
      fi
  }
 
- install_acme() {
-     cd ~
-     echo -e "${green}开始安装acme脚本...${plain}"
-     curl https://get.acme.sh | sh
-     if [ $? -ne 0 ]; then
-         echo -e "${red}acme安装失败${plain}"
-         return 1
-     else
-         echo -e "${green}acme安装成功${plain}"
-     fi
-     return 0
- }
+install_acme() {
+    cd ~
+    echo -e "${green}开始安装acme脚本...${plain}"
+    curl https://get.acme.sh | sh
+    if [ $? -ne 0 ]; then
+        echo -e "${red}acme安装失败${plain}"
+        return 1
+    else
+        echo -e "${green}acme安装成功${plain}"
+    fi
+    return 0
+}
 
- #method for standalone mode
- ssl_cert_issue_standalone() {
-
-    
-          
-            
-    
-
-          
-    
-    
-  
+#method for standalone mode
+ssl_cert_issue_standalone() {
     #check for acme.sh first
-    if ! command -v ~/.acme.sh/acme.sh &>/dev/null; then
+    if ! command -v acme.sh &>/dev/null; then
         install_acme
         if [ $? -ne 0 ]; then
             echo -e "${red}无法安装acme,请检查错误日志${plain}"
