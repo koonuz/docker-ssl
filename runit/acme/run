@@ -1,3 +1,3 @@
 #!/bin/sh
 echo -e "starting acme.sh ..."
-exec sleep 300
+exec crontab -l && sleep 60
