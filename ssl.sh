@@ -6,7 +6,7 @@ yellow='\033[0;33m'
 plain='\033[0m'
 
 before_show_menu() {
-    echo && echo -n -e "${yellow}按回车返回主菜单: ${plain}" && read temp
+    echo -n -e "${yellow}按回车返回主菜单: ${plain}" && read
     show_menu
 }
 
@@ -200,7 +200,7 @@ ssl_cert_issue_by_cloudflare() {
             chmod 755 $certPath
         fi
     else
-        show_menu
+        before_show_menu
     fi
 }
 
