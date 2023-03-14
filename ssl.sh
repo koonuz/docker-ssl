@@ -226,7 +226,7 @@ show_menu() {
         ;;
         2) check_crontab
         ;;
-        *) echo -e "${red}请输入正确的数字 [0-2]${plain}"
+        *) echo -e "${red}请输入正确的数字 [0-2]${plain}" && show_menu
         ;;
     esac
 }
