@@ -248,7 +248,7 @@ ssl_cert_issue_webroot() {
     #NOTE:This should be handled by user
     #open the port and kill the occupied progress
         ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-        ~/.acme.sh/acme.sh --issue -d ${WR_Domain} -w ${Webroot}
+        ~/.acme.sh/acme.sh --issue -d ${WR_Domain} --webroot ${Webroot}
         if [ $? -ne 0 ]; then
             echo -e "${red}证书申请失败,原因请详见报错信息${plain}"
             rm -rf ~/.acme.sh/${WR_Domain}
