@@ -211,7 +211,7 @@ check_crontab() {
 
 show_menu() {
     echo -e "
-  ${green}Acme.sh - 一键申请域名SSL证书${plain}
+  ${green}Acme.sh 一键申请域名SSL证书${plain}
 ————————————————
   ${green}0.${plain} 退出脚本
 ————————————————
@@ -226,7 +226,7 @@ show_menu() {
         ;;
         2) check_crontab
         ;;
-        *) echo -e "${red}请输入正确的数字 [0-2]${plain}" && show_menu
+        *) echo -e "${red}请输入正确的数字${plain}${green}[0-2]${plain}" && show_menu
         ;;
     esac
 }
