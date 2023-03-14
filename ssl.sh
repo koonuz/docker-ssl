@@ -126,8 +126,9 @@ ssl_cert_issue_by_cloudflare() {
     echo -e "${green}2.知晓Cloudflare Global API Key${plain}"
     echo -e "${green}3.域名已通过Cloudflare进行解析到当前服务器${plain}"
     echo -e "${green}4.该脚本申请证书默认安装路径为/root/cert目录${plain}"
-    confirm "我已确认以上内容[y/n]" "y"
-    if [ $? -eq 0 ]; then
+#    confirm "我已确认以上内容[y/n]" "y"
+#    if [ $? -eq 0 ]; then
+    if ! command -v ~/.acme.sh/acme.sh &>/dev/null; then
         install_acme
         if [ $? -ne 0 ]; then
             echo -e "${red}无法安装acme.sh,请检查错误日志${plain}"
