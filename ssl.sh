@@ -33,7 +33,7 @@ ssl_cert_issue() {
  }
 
 install_acme() {
-    cd ~
+#    cd ~
     echo -e "${green}开始安装acme.sh脚本...${plain}"
     curl https://get.acme.sh | sh
     if [ $? -ne 0 ]; then
