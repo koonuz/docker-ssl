@@ -5,6 +5,14 @@ green='\033[0;32m'
 yellow='\033[0;33m'
 plain='\033[0m'
 
+confirm() {
+    if [[ x"${temp}" == x"y" || x"${temp}" == x"Y" ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 before_show_menu() {
     echo -n -e "${yellow}按回车返回主菜单: ${plain}" && read
     show_menu
@@ -37,7 +45,7 @@ ssl_cert_issue() {
  }
 
 install_acme() {
-    echo -e "${green}开始安装acme.sh脚本...${plain}"
+    echo -e "${green}未安装acme.sh脚本,现开始进行安装acme.sh脚本...${plain}"
     curl https://get.acme.sh | sh
     if [ $? -ne 0 ]; then
         echo -e "${red}acme.sh安装失败${plain}"
@@ -48,15 +56,29 @@ install_acme() {
     return 0
 }
 
-#method for Standalone mode
-ssl_cert_issue_standalone() {
-    #check for acme.sh first
+check_acme() {
+    echo -e "${green}正在检查是否已安装acme.sh脚本...${plain}"
     if ! command -v ~/.acme.sh/acme.sh &>/dev/null; then
         install_acme
         if [ $? -ne 0 ]; then
             echo -e "${red}无法安装acme.sh,请检查错误日志${plain}"
             exit 1
         fi
+    fi
+}
+
+#method for Standalone mode
+ssl_cert_issue_standalone() {
+    echo -e ""
+    echo -e "${yellow}******使用说明******${plain}"
+    echo -e "${green}该脚本将使用Acme脚本申请证书,使用时需保证:${plain}"
+    echo -e "${green}1.您目前使用的是【方式1】Standalone mode模式${plain}"
+    echo -e "${green}2.请确保端口保持开放状态且没有被其他Web服务占用${plain}"
+    echo -e "${green}3.该脚本申请证书默认安装路径为/root/cert目录${plain}"
+    confirm "我已确认以上内容[y/n]" "y"
+    if [ $? -eq 0 ]; then
+    #check for acme.sh first
+    check_acme
     fi
     #creat a directory for install cert
     certPath=/root/cert
@@ -131,12 +153,10 @@ ssl_cert_issue_by_cloudflare() {
     echo -e "${green}2.知晓Cloudflare Global API Key${plain}"
     echo -e "${green}3.域名已通过Cloudflare进行解析到当前服务器${plain}"
     echo -e "${green}4.该脚本申请证书默认安装路径为/root/cert目录${plain}"
-    if ! command -v ~/.acme.sh/acme.sh &>/dev/null; then
-        install_acme
-        if [ $? -ne 0 ]; then
-            echo -e "${red}无法安装acme.sh,请检查错误日志${plain}"
-            exit 1
-        fi
+    confirm "我已确认以上内容[y/n]" "y"
+    if [ $? -eq 0 ]; then
+    #check for acme.sh first
+    check_acme
     fi
     CF_Domain=""
     CF_GlobalKey=""
@@ -207,14 +227,18 @@ ssl_cert_issue_by_cloudflare() {
 
 #method for Webroot mode
 ssl_cert_issue_webroot() {
+    echo -e ""
+    echo -e "${yellow}******使用说明******${plain}"
+    echo -e "${green}该脚本将使用Acme脚本申请证书,使用时需保证:${plain}"
+    echo -e "${green}1.您目前使用的是【方式3】Webroot mode模式${plain}"
+    echo -e "${green}2.请确域名的Webroot目录是正确的文件夹路径${plain}"
+    echo -e "${green}3.该脚本申请证书默认安装路径为/root/cert目录${plain}"
+    confirm "我已确认以上内容[y/n]" "y"
+    if [ $? -eq 0 ]; then
     #check for acme.sh first
-    if ! command -v ~/.acme.sh/acme.sh &>/dev/null; then
-        install_acme
-        if [ $? -ne 0 ]; then
-            echo -e "${red}无法安装acme.sh,请检查错误日志${plain}"
-            exit 1
-        fi
+    check_acme
     fi
+
     #creat a directory for install cert
     certPath=/root/cert
     if [ ! -d "$certPath" ]; then
