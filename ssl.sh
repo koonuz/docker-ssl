@@ -46,8 +46,10 @@ check_acme() {
             return 1
         else
             echo -e "${green}acme.sh安装成功${plain}"
+            return 0
         fi
-        return 0
+    else
+        echo -e "${green}acme.sh已安装,开始申请SSL证书${plain}"
     fi
 }
 
