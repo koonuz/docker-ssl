@@ -36,26 +36,18 @@ ssl_cert_issue() {
     fi
  }
 
-install_acme() {
-    echo -e "${green}未安装acme.sh脚本,现开始进行安装acme.sh脚本...${plain}"
-    curl https://get.acme.sh | sh
-    if [ $? -ne 0 ]; then
-        echo -e "${red}acme.sh安装失败${plain}"
-        return 1
-    else
-        echo -e "${green}acme.sh安装成功${plain}"
-    fi
-    return 0
-}
-
 check_acme() {
     echo -e "${green}正在检查是否已安装acme.sh脚本...${plain}"
     if ! command -v ~/.acme.sh/acme.sh &>/dev/null; then
-        install_acme
+        echo -e "${green}未安装acme.sh脚本,现开始进行安装acme.sh脚本...${plain}"
+        curl https://get.acme.sh | sh
         if [ $? -ne 0 ]; then
-            echo -e "${red}无法安装acme.sh,请检查错误日志${plain}"
-            exit 1
+            echo -e "${red}acme.sh安装失败${plain}"
+            return 1
+        else
+            echo -e "${green}acme.sh安装成功${plain}"
         fi
+        return 0
     fi
 }
 
