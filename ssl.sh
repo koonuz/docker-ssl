@@ -15,12 +15,12 @@ ssl_cert_issue() {
     echo -e ""
     echo -e "${yellow}******使用说明******${plain}"
     echo -e "该脚本提供3种方式实现证书签发,证书安装路径均为${green}/root/cert${plain}"
-    echo -e "${yellow}【方式1】${plain}${green}Acme Standalone mode${plain},需保持端口未被占用,默认使用${green}80${plain}端口"
-    echo -e "${yellow}【方式2】${plain}${green}Acme DNS API mode${plain},需提供Cloudflare Global API Key"
-    echo -e "${yellow}【方式3】${plain}${green}Acme Webroot mode${plain},需提供域名的webroot路径,默认路径为${green}/root/web${plain}"
-    echo -e "如域名属于${green}免费域名${plain},则推荐使用${yellow}【方式1】${plain}进行申请.若已部署了Nginx/Apache,请先手动暂停其服务"
-    echo -e "如域名属于${green}非免费域名${plain}且使用${green}Cloudflare${plain}进行域名解析的,则推荐使用${yellow}【方式2】${plain}进行申请"
-    echo -e "如已部署了${green}Nginx${plain}服务且申请SSL证书时${green}不想暂停其提供的Web服务${plain},则推荐使用${yellow}【方式3】${plain}进行申请"
+    echo -e "${yellow}【方式1】${plain}${green}Acme Standalone mode${plain},需确保端口${red}未被占用${plain},默认使用${green}80${plain}端口"
+    echo -e "${yellow}【方式2】${plain}${green}Acme DNS API mode${plain},需提供${green}Cloudflare Global API Key{plain}"
+    echo -e "${yellow}【方式3】${plain}${green}Acme Webroot mode${plain},需提供域名在本机的${green}webroot路径目录${plain},默认路径为${green}/root/web${plain}"
+    echo -e "若域名属于${green}免费域名${plain},则推荐使用${yellow}【方式1】${plain}进行申请.若已部署了${green}Nginx/Apache${plain}提供web服务,请先${red}}手动暂停${plain}其服务"
+    echo -e "若域名属于${green}付费域名${plain}且使用${green}Cloudflare${plain}进行域名解析的,则推荐使用${yellow}【方式2】${plain}进行申请"
+    echo -e "若已部署${green}Nginx${plain}提供web服务且签发证书时${green}不想手动暂停其服务${plain},则推荐使用${yellow}【方式3】${plain}进行申请"
     read -p "请选择你想使用的方式【1、2、3】": method
     echo -e "你所使用的是【${yellow}方式${method}${plain}】"
 
@@ -62,7 +62,7 @@ ssl_cert_issue_standalone() {
     echo -e "${green}2.请确保端口保持开放状态且没有被其他Web服务占用${plain}"
     echo -e "${green}3.需申请SSL证书的域名已解析到当前服务器${plain}"
     echo -e "${green}4.该脚本申请证书默认安装路径为/root/cert目录${plain}"
-    echo -e "${yellow}*******************${plain}"
+    echo -e "${yellow}********************${plain}"
 
     #check for acme.sh first
     check_acme
@@ -145,7 +145,7 @@ ssl_cert_issue_by_cloudflare() {
     echo -e "${green}2.知晓Cloudflare Global API Key${plain}"
     echo -e "${green}3.需申请SSL证书的域名已通过Cloudflare解析到当前服务器${plain}"
     echo -e "${green}4.该脚本申请证书默认安装路径为/root/cert目录${plain}"
-    echo -e "${yellow}*******************${plain}"
+    echo -e "${yellow}********************${plain}"
 
     #check for acme.sh first
     check_acme
@@ -228,6 +228,7 @@ ssl_cert_issue_webroot() {
     echo -e "${green}2.确认域名在本机的webroot路径目录${plain}"
     echo -e "${green}3.需申请SSL证书的域名已解析到当前服务器${plain}"
     echo -e "${green}4.该脚本申请证书默认安装路径为/root/cert目录${plain}"
+    echo -e "${yellow}********************${plain}"
 
     #check for acme.sh first
     check_acme
