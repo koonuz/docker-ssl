@@ -20,7 +20,7 @@ ssl_cert_issue() {
     echo -e "${yellow}【方式3】${plain}:${green}Acme Webroot mode${plain},需提供域名的webroot路径,默认路径为${green}/root/web${plain}"
     echo -e "如域名属于${green}免费域名${plain},则推荐使用${yellow}【方式1】${plain}进行申请.若已部署了Nginx/Apache,请先手动暂停其服务"
     echo -e "如域名属于${green}非免费域名${plain}且使用${green}Cloudflare${plain}进行域名解析的,则推荐使用${yellow}【方式2】${plain}进行申请"
-    echo -e "如已部署了${green}Nginx/Apache${plain}提供Web服务且申请SSL证书时${green}不想暂停Web服务${plain},则推荐使用${yellow}【方式3】${plain}进行申请"
+    echo -e "如已部署了${green}Nginx${plain}且申请SSL证书时${green}不想暂停其提供的Web服务${plain},则推荐使用${yellow}【方式3】${plain}进行申请"
     read -p "请选择你想使用的方式【1、2、3】": method
     echo -e "你所使用的是【${yellow}方式${method}${plain}】"
 
