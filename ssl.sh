@@ -62,6 +62,7 @@ ssl_cert_issue_standalone() {
     echo -e "${green}2.请确保端口保持开放状态且没有被其他Web服务占用${plain}"
     echo -e "${green}3.需申请SSL证书的域名已解析到当前服务器${plain}"
     echo -e "${green}4.该脚本申请证书默认安装路径为/root/cert目录${plain}"
+    echo -e "${yellow}*******************${plain}"
 
     #check for acme.sh first
     check_acme
@@ -76,7 +77,7 @@ ssl_cert_issue_standalone() {
     fi
     #get the domain here,and we need verify it
     local domain=""
-    echo -e "${yellow}请设置域名:${plain}"
+    echo -e "${yellow}请设置域名${plain}"
     read -p "请输入你的域名:" domain
     echo -e "你输入的域名为:${yellow}${domain}${plain},${green}正在进行域名合法性校验...${plain}"
     #here we need to judge whether there exists cert already
@@ -99,6 +100,10 @@ ssl_cert_issue_standalone() {
     #NOTE:This should be handled by user
     #open the port and kill the occupied progress
     ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+    if [ $? -ne 0 ]; then
+        echo -e "${red}修改默认CA为Lets'Encrypt失败${plain},脚本将自动退出..."
+        exit 1
+    fi
     ~/.acme.sh/acme.sh --issue -d ${domain} --standalone --httpport ${WebPort}
     if [ $? -ne 0 ]; then
         echo -e "${red}证书签发失败${plain},原因请详见报错信息"
@@ -140,6 +145,7 @@ ssl_cert_issue_by_cloudflare() {
     echo -e "${green}2.知晓Cloudflare Global API Key${plain}"
     echo -e "${green}3.需申请SSL证书的域名已通过Cloudflare解析到当前服务器${plain}"
     echo -e "${green}4.该脚本申请证书默认安装路径为/root/cert目录${plain}"
+    echo -e "${yellow}*******************${plain}"
 
     #check for acme.sh first
     check_acme
@@ -156,7 +162,7 @@ ssl_cert_issue_by_cloudflare() {
         rm -rf $certPath
         mkdir $certPath
     fi
-    echo -e "${yellow}请设置域名:${plain}"
+    echo -e "${yellow}请设置域名${plain}"
     read -p "请输入你的域名:" CF_Domain
     echo -e "你输入的域名为:${yellow}${CF_Domain}${plain},正在进行域名合法性校验..."
     #here we need to judge whether there exists cert already
@@ -169,10 +175,10 @@ ssl_cert_issue_by_cloudflare() {
     else
         echo -e "${green}证书有效性校验通过...${plain}"
     fi
-    echo -e "${yellow}请输入你的域名Global API Key密钥:${plain}"
+    echo -e "${yellow}请输入你的域名Global API Key密钥${plain}"
     read -p "请输入你的域名Global API Key:" CF_GlobalKey
     echo -e "你的域名Global API Key密钥为:${yellow}${CF_GlobalKey}${plain}"
-    echo -e "${yellow}请输入你在Cloudflare的注册邮箱:${plain}"
+    echo -e "${yellow}请输入你在Cloudflare的注册邮箱${plain}"
     read -p "请输入你在Cloudflare的注册邮箱:" CF_AccountEmail
     echo -e "你的Cloudflare注册邮箱为:${yellow}${CF_AccountEmail}${plain}"
     ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
@@ -188,7 +194,7 @@ ssl_cert_issue_by_cloudflare() {
         rm -rf ~/.acme.sh/${CF_Domain}
         exit 1
     else
-        echo -e "${green}证书签发成功,正在进行证书安装...${plain}"
+        echo -e "${green}证书签发成功${plain},正在进行证书安装..."
     fi
     ~/.acme.sh/acme.sh --installcert -d ${CF_Domain} -d *.${CF_Domain} --ca-file /root/cert/ca.cer \
         --cert-file /root/cert/${CF_Domain}.cer --key-file /root/cert/${CF_Domain}.key \
@@ -219,7 +225,7 @@ ssl_cert_issue_webroot() {
     echo -e "${yellow}******使用说明******${plain}"
     echo -e "${green}该脚本将使用Acme脚本申请证书,使用时需知晓以下事项${plain}"
     echo -e "${green}1.您目前使用的是【方式3】Webroot mode模式${plain}"
-    echo -e "${green}2.请确域名的Webroot路径是否正确${plain}"
+    echo -e "${green}2.确认域名在本机的webroot路径目录${plain}"
     echo -e "${green}3.需申请SSL证书的域名已解析到当前服务器${plain}"
     echo -e "${green}4.该脚本申请证书默认安装路径为/root/cert目录${plain}"
 
@@ -237,7 +243,7 @@ ssl_cert_issue_webroot() {
 
     #get the domain here,and we need verify it
     local WR_Domain=""
-    echo -e "${yellow}请设置域名:${plain}"
+    echo -e "${yellow}请设置域名${plain}"
     read -p "请输入你的域名:" WR_Domain
     echo -e "你输入的域名为:${yellow}${WR_Domain}${plain},正在进行域名合法性校验..."
     #here we need to judge whether there exists cert already
@@ -252,18 +258,22 @@ ssl_cert_issue_webroot() {
     fi
     #get needed the web root folder here
     local Webroot=/root/web
-    read -p "请输入域名的webroot路径目录,按回车键将使用/root/web为默认路径:" Webroot
-    echo -e "将通过域名:${yellow}}${WR_Domain}${plain}的webroot路径目录${green}}${Webroot}${plain}进行证书的申请校验..."
+    read -p "请输入域名在本机的webroot路径目录,按回车键将使用/root/web为默认的路径目录:" Webroot
+    echo -e "将通过域名:${yellow}}${WR_Domain}${plain}的webroot路径目录:${green}}${Webroot}${plain}进行证书的签发校验..."
     #NOTE:This should be handled by user
     #open the port and kill the occupied progress
     ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+    if [ $? -ne 0 ]; then
+        echo -e "${red}修改默认CA为Lets'Encrypt失败${plain},脚本将自动退出..."
+        exit 1
+    fi
     ~/.acme.sh/acme.sh --issue -d ${WR_Domain} --webroot ${Webroot}
     if [ $? -ne 0 ]; then
         echo -e "${red}证书签发失败${plain},原因请详见报错信息"
         rm -rf ~/.acme.sh/${WR_Domain}
         exit 1
     else
-        echo -e "${green}证书签发成功,正在进行证书安装...${plain}"
+        echo -e "${green}证书签发成功${plain},正在进行证书安装..."
     fi
     #install cert
     ~/.acme.sh/acme.sh --installcert -d ${WR_Domain} --ca-file /root/cert/ca.cer \
