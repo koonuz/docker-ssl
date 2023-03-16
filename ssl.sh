@@ -14,15 +14,15 @@ ssl_cert_issue() {
     local method=""
     echo -e ""
     echo -e "${yellow}******使用说明******${plain}"
-    echo -e "${green}该脚本提供3种方式实现证书签发,证书安装路径均为/root/cert${plain}"
-    echo -e "${green}方式1:acme Standalone mode${plain},需要保持端口未被占用,本脚本默认使用端口为${green}80端口${plain}"
-    echo -e "${green}方式2:acme DNS API mode${plain},需要提供Cloudflare Global API Key"
-    echo -e "${green}方式3:acme Webroot mode${plain},无需暂停Nginx/Apache的Web服务"
-    echo -e "如域名属于${green}免费域名${plain},则推荐使用${green}方式1${plain}进行申请.若已部署了Nginx/Apache,请先手动暂停其服务"
-    echo -e "如域名属于${green}非免费域名${plain}且${green}使用Cloudflare进行域名解析${plain}的,则推荐使用${green}方式2${plain}进行申请"
-    echo -e "如${green}已部署了Nginx/Apache的Web服务${plain}且${green}不想暂停其Web服务${plain}的,则推荐使用${green}方式3${plain}进行申请"
+    echo -e "该脚本提供3种方式实现证书签发,证书安装路径均为${green}/root/cert${plain}"
+    echo -e "${yellow}方式1${plain}:${green}Acme Standalone mode${plain},需保持端口未被占用,默认使用${green}80${plain}端口"
+    echo -e "${yellow}方式2${plain}:${green}Acme DNS API mode${plain},需提供Cloudflare Global API Key"
+    echo -e "${yellow}方式3${plain}:${green}Acme Webroot mode${plain},需提供域名的webroot路径,默认路径为${green}/root/web{plain}"
+    echo -e "如域名属于${green}免费域名${plain},则推荐使用${yellow}方式1${plain}进行申请.若已部署了Nginx/Apache,请先手动暂停其服务"
+    echo -e "如域名属于${green}非免费域名${plain}且使用${green}Cloudflare${plain}进行域名解析的,则推荐使用${yellow}方式2${plain}进行申请"
+    echo -e "如${green}已部署了Nginx/Apache的Web服务${plain}且${green}不想暂停其提供的Web服务${plain},则推荐使用${yellow}方式3${plain}进行申请"
     read -p "请选择你想使用的方式【1、2、3】": method
-    echo -e "你所使用的方式为${green}${method}${plain}"
+    echo -e "你所使用的是方式${yellow}${method}${plain}"
 
     if [ "${method}" == "1" ]; then
         ssl_cert_issue_standalone
@@ -31,7 +31,7 @@ ssl_cert_issue() {
     elif [ "${method}" == "3" ]; then
         ssl_cert_issue_webroot
     else
-        echo -e  "${red}输入无效,请检查你的输入,脚本将退出...${plain}"
+        echo -e  "${red}输入为无效方式,请检查输入的数字!脚本将自动退出...${plain}"
         exit 1
     fi
  }
@@ -215,7 +215,7 @@ ssl_cert_issue_webroot() {
     echo -e "${yellow}******使用说明******${plain}"
     echo -e "${green}该脚本将使用Acme脚本申请证书,使用时需保证:${plain}"
     echo -e "${green}1.您目前使用的是【方式3】Webroot mode模式${plain}"
-    echo -e "${green}2.请确域名的Webroot目录是正确的文件夹路径${plain}"
+    echo -e "${green}2.请确域名的Webroot路径是否正确${plain}"
     echo -e "${green}3.该脚本申请证书默认安装路径为/root/cert目录${plain}"
 
     #check for acme.sh first
